@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Кинопоиск</string>
+    <string name="year_label">Год выпуска: %1$s</string>
+    <string name="countries_label">Страны: %1$s</string>
+    <string name="genres_label">Жанры: %1$s</string>
+    <string name="loading_error">Произошла ошибка, проверьте соединение с интернетом</string>
+    <string name="loading_error_on_start">Проверьте соединение с интернетом</string>
+    <string name="reload">Повторить</string>
+    <string name="home_label">Популярные</string>
+    <string name="favourite_label">Избранное</string>
+</resources>
