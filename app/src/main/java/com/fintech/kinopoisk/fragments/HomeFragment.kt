@@ -164,8 +164,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 .commit()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         lifecycleScope.launch(Dispatchers.IO) {
             val newFavouriteFilmIds = repository?.getFilmsIds() ?: emptyList()
             val difference = favouriteFilmIds.subtract(newFavouriteFilmIds.toSet())
