@@ -42,4 +42,11 @@ class FilmsAdapter(
         list.addAll(filmsToAppend)
         notifyItemRangeInserted(list.size - Constants.PAGE_SIZE, Constants.PAGE_SIZE)
     }
+
+    fun updateFilmsRemovedFromFavourite(removedFilmsIds: Set<Int>) {
+        list.forEach {
+            if (it.id in removedFilmsIds)
+                it.isFavourite = false
+        }
+    }
 }

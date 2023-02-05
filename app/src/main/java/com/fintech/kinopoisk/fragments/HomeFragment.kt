@@ -2,7 +2,6 @@ package com.fintech.kinopoisk.fragments
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +37,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private var isLastPage = false
     private var isLoading = false
     private var pageNumber: Int = 1
+    private var favouriteFilmIds: List<Int> = emptyList()
 
     init {
         getFilmsPage()
@@ -81,19 +81,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 binding?.ivLoading?.visibility = View.GONE
                 if (adapter == null)
                     lifecycleScope.launch(Dispatchers.IO) {
-                        val favouriteFilmIds = repository?.getFilmsIds()
-                        body.films.forEach {
-                            if (favouriteFilmIds != null) {
+                        favouriteFilmIds = repository?.getFilmsIds() ?: emptyList()
+                        withContext(Dispatchers.Main) {
+                            setAdapter(body.films.onEach {
                                 if (it.id in favouriteFilmIds)
                                     it.isFavourite = true
-                            }
-                        }
-                        withContext(Dispatchers.Main) {
-                            setAdapter(body.films)
+                            })
                         }
                     }
                 else {
-                    adapter?.addFilms(body.films)
+                    adapter?.addFilms(body.films.onEach {
+                        if (it.id in favouriteFilmIds)
+                            it.isFavourite = true
+                    })
                     isLoading = false
                 }
                 if (pageNumber >= Constants.MAX_PAGES)
@@ -162,6 +162,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     DescriptionFragment.getInstance(filmId, false)
                 )
                 .commit()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch(Dispatchers.IO) {
+            val newFavouriteFilmIds = repository?.getFilmsIds() ?: emptyList()
+            val difference = favouriteFilmIds.subtract(newFavouriteFilmIds.toSet())
+            withContext(Dispatchers.Main) {
+                if (difference.isNotEmpty()) {
+                    adapter?.updateFilmsRemovedFromFavourite(difference)
+                    adapter?.notifyDataSetChanged()
+                    favouriteFilmIds = newFavouriteFilmIds
+                }
+            }
+        }
     }
 
     override fun onCreateView(

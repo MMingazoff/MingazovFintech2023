@@ -12,7 +12,8 @@ import java.io.File
 class FavouriteFilmHolder(
     private val binding: ItemFilmBinding,
     private val context: Context,
-    private val action: (Int) -> Unit
+    private val action: (Int) -> Unit,
+    private val onDelete: (FavouriteFilm) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
     fun onBind(film: FavouriteFilm) {
         binding.run {
@@ -26,6 +27,12 @@ class FavouriteFilmHolder(
             }
             root.setOnClickListener {
                 action(film.id)
+            }
+            root.setOnLongClickListener {
+                if (file.exists())
+                    file.delete()
+                onDelete(film)
+                true
             }
         }
     }

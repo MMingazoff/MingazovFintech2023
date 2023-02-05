@@ -34,6 +34,8 @@ class FavouriteFragment : Fragment(R.layout.fragment_favourite) {
             adapter = FavouriteFilmsAdapter(
                 films!!,
                 requireContext(),
+                lifecycleScope,
+                repository,
                 this@FavouriteFragment::onFilmClicked
             )
             withContext(Dispatchers.Main) {

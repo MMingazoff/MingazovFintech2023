@@ -8,6 +8,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
+import com.fintech.kinopoisk.R
 import com.fintech.kinopoisk.databinding.ItemFilmBinding
 import com.fintech.kinopoisk.network.Network
 import com.fintech.kinopoisk.network.response.Film
@@ -36,6 +37,7 @@ class FilmHolder(
             ivFavourite.isVisible = film.isFavourite
             glide
                 .load(film.poster)
+                .placeholder(R.drawable.loading)
                 .into(posterIv)
             root.setOnClickListener {
                 action(film.id)
